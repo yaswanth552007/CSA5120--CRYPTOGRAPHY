@@ -1,0 +1,11 @@
+text = input("Enter a message: ")
+k = int(input("Enter shift value (1-25): "))
+encrypted = ""
+for ch in text:
+    if ch.islower():
+        encrypted += chr((ord(ch) - ord('a') + k) % 26 + ord('a'))
+    elif ch.isupper():
+        encrypted += chr((ord(ch) - ord('A') + k) % 26 + ord('A'))
+    else:
+        encrypted += ch 
+print("Encrypted message:", encrypted)

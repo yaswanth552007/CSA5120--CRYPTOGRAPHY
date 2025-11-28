@@ -1,0 +1,12 @@
+plaintext = input("Enter the plaintext: ")
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+cipher   = "qwertyuiopasdfghjklzxcvbnm" 
+ciphertext = ""
+for ch in plaintext.lower():
+    if ch in alphabet:
+        index = alphabet.index(ch)
+        ciphertext += cipher[index]
+    else:
+        ciphertext += ch 
+print("Cipher text:", ciphertext)
