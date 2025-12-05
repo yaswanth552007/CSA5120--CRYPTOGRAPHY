@@ -1,0 +1,58 @@
+def playfair_matrix(key):
+    key = key.upper().replace("J", "I")
+    seen = set()
+    seq = []
+
+    for ch in key:
+        if ch.isalpha() and ch not in seen:
+            seen.add(ch)
+            seq.append(ch)
+
+    for ch in "ABCDEFGHIKLMNOPQRSTUVWXYZ":
+        if ch not in seen:
+            seq.append(ch)
+
+    return [seq[i:i+5] for i in range(0, 25, 5)]
+
+
+def find_pos(matrix, ch):
+    for r in range(5):
+        for c in range(5):
+            if matrix[r][c] == ch:
+                return r, c
+
+
+def decrypt_playfair(cipher, key):
+    matrix = playfair_matrix(key)
+    arr = [ch for ch in cipher.upper() if ch.isalpha()]
+    plaintext = ""
+    i = 0
+
+    while i < len(arr):
+        a = arr[i]
+        b = arr[i+1] if i+1 < len(arr) else "X"
+        r1, c1 = find_pos(matrix, a)
+        r2, c2 = find_pos(matrix, b)
+
+        if r1 == r2:  # same row
+            plaintext += matrix[r1][(c1-1)%5] + matrix[r2][(c2-1)%5]
+        elif c1 == c2:  # same column
+            plaintext += matrix[(r1-1)%5][c1] + matrix[(r2-1)%5][c2]
+        else:  # rectangle rule
+            plaintext += matrix[r1][c2] + matrix[r2][c1]
+
+        i += 2
+
+    # remove filler X that was added between repeated letters
+    plaintext = plaintext.replace("X", "")
+    
+    # add spaces every 5 letters for readability (optional)
+    words = [plaintext[i:i+5] for i in range(0, len(plaintext), 5)]
+    return " ".join(words)
+
+
+cipher_text = """KX IEYU REB EZW EHEW RYTU HE YFSKR EH EGOYFIWU QUTQYO MUQ YCAIP OBOOEXUKN BOUKNO BOTF RBWB ONEYCU ZWRGNON SSZ TURZOKZVYOUZSKRE"""
+key = "royal new zealand navy"
+
+print("Decrypted Text:")
+print(decrypt_playfair(cipher_text, key))
