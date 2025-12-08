@@ -1,0 +1,29 @@
+import random
+import hashlib
+
+# Very simplified (not real cryptography)
+
+def fake_dsa_sign(message):
+    k = random.randint(1, 1000000)   # random k each time
+    h = int(hashlib.sha256(message.encode()).hexdigest(), 16)
+    r = (h * k) % 97   # simplified
+    s = (h + k) % 89   # simplified
+    return (r, s)
+
+def fake_rsa_sign(message):
+    h = hashlib.sha256(message.encode()).hexdigest()
+    return h  # same signature every time (simplified)
+
+message = "HELLO"
+
+# Sign same message twice
+sig1_dsa = fake_dsa_sign(message)
+sig2_dsa = fake_dsa_sign(message)
+
+sig1_rsa = fake_rsa_sign(message)
+sig2_rsa = fake_rsa_sign(message)
+
+print("DSA Signature 1 =", sig1_dsa)
+print("DSA Signature 2 =", sig2_dsa)
+print("\nRSA Signature 1 =", sig1_rsa)
+print("RSA Signature 2 =", sig2_rsa)
