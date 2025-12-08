@@ -1,0 +1,33 @@
+# Simplest DES-style key schedule showing:
+# First 24 bits from C, next 24 bits from D (disjoint halves)
+
+# 56-bit key (example)
+key56 = "10101010110011001100110011110000111100000011110000111100"
+
+# Split into two disjoint halves of 28 bits each
+C = key56[:28]   # first 28 bits
+D = key56[28:]   # last 28 bits
+
+# DES left-shift schedule
+shifts = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+
+def left_shift(bits, n):
+    return bits[n:] + bits[:n]
+
+round_keys = []
+
+for s in shifts:
+    # Shift halves
+    C = left_shift(C, s)
+    D = left_shift(D, s)
+
+    # Create 48-bit subkey:
+    # - first 24 bits taken from C (subset of 28)
+    # - second 24 bits taken from D (subset of 28)
+    K = C[:24] + D[:24]
+
+    round_keys.append(K)
+
+# Print subkeys
+for i, k in enumerate(round_keys, 1):
+    print(f"K{i}: {k}")

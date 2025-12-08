@@ -1,0 +1,32 @@
+# Simplest DES key-generation + reverse keys for decryption
+
+key = "1010101010111011000010010001100000100111001101101100110011011100"
+
+# Split key into two halves (C and D) – simple demonstration
+C = key[:28]
+D = key[28:]
+
+# DES left-shift schedule
+shifts = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+
+def left_shift(bits, n):
+    return bits[n:] + bits[:n]
+
+round_keys = []
+
+# Generate 16 round keys (simple version)
+for s in shifts:
+    C = left_shift(C, s)
+    D = left_shift(D, s)
+    round_keys.append(C + D)   # Simplified key (no PC-2)
+
+print("Encryption Keys (K1 to K16):")
+for i, k in enumerate(round_keys, 1):
+    print(f"K{i}: {k}")
+
+# Reverse keys for DES decryption
+dec_keys = list(reversed(round_keys))
+
+print("\nDecryption Keys (K16 to K1):")
+for i, k in enumerate(dec_keys, 1):
+    print(f"K{i}: {k}")
